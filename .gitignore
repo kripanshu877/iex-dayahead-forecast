@@ -1,0 +1,23 @@
+# data and artefacts - never commit
+data/
+models/
+output/
+*.csv
+*.xlsx
+*.json.bak
+
+# secrets
+.env
+*.token
+
+# python
+__pycache__/
+*.py[cod]
+.ipynb_checkpoints/
+.venv/
+venv/
+*.egg-info/
+
+# os
+.DS_Store
+Thumbs.db
