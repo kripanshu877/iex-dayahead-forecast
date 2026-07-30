@@ -1,7 +1,7 @@
 # Day-Ahead Electricity Price Forecasting (IEX)
 
 Forecasts the clearing price of all **96 fifteen-minute blocks** of the next day
-across three Indian Energy Exchange markets — DAM, GDAM and RTM — and flags, for
+across three Indian Energy Exchange markets ??? DAM, GDAM and RTM ??? and flags, for
 every block, which market is expected to be cheapest and which dearest.
 
 The system runs unattended once a day, writes a colour-coded workbook for the
@@ -10,9 +10,9 @@ actually cleared.
 
 ## Results
 
-Walk-forward backtest, out-of-sample, January–July 2026:
+Walk-forward backtest, out-of-sample, January???July 2026:
 
-| Market | MAE (₹) | RMSE (₹) | WMAPE | Accuracy | R² | Cap capture |
+| Market | MAE (???) | RMSE (???) | WMAPE | Accuracy | R?? | Cap capture |
 |--------|--------:|---------:|------:|---------:|-----:|------------:|
 | DAM    | 498     | 1,031    | 10.9% | 89.1%    | 0.890 | 90% |
 | GDAM   | 392     | 778      | 7.9%  | 92.1%    | 0.936 | 92% |
@@ -26,11 +26,11 @@ price.
 Two caveats worth stating plainly:
 
 - **The headline is flattered by capped blocks.** A large share of summer blocks
-  sit at the ₹10,000/MWh regulatory ceiling, and those are trivially easy once
+  sit at the ???10,000/MWh regulatory ceiling, and those are trivially easy once
   the classifier flags them. On non-capped blocks only, DAM runs around 84% and
   GDAM around 89%.
-- **RTM is genuinely hard.** Its volatility comes from same-day events — a plant
-  tripping, a demand surge — which leave no trace in the data available the day
+- **RTM is genuinely hard.** Its volatility comes from same-day events ??? a plant
+  tripping, a demand surge ??? which leave no trace in the data available the day
   before. 73% is close to the honest ceiling for a day-ahead model, not a bug
   left unfixed.
 
@@ -39,7 +39,7 @@ Two caveats worth stating plainly:
 **Leakage-safe timing.** The three markets are not equally fresh at forecast
 time. DAM and GDAM for the current day cleared the previous afternoon, so a
 one-day lookback gives the model something real. RTM is still trading through
-the day, so its most recent complete day is the day before yesterday — a two-day
+the day, so its most recent complete day is the day before yesterday ??? a two-day
 lookback. This difference is encoded explicitly per market, so the model never
 uses a number it would not genuinely have had.
 
@@ -53,7 +53,7 @@ work between the normal regime and the scarcity regime.
 **Features.** 76 per market: price lags and rolling statistics, previous-day
 summaries, bid and cleared volumes, the purchase-minus-sell gap as a scarcity
 read, cap-regime persistence terms, calendar terms, weather from Open-Meteo, and
-cross-market spreads. Each market's model sees the history of all three — DAM
+cross-market spreads. Each market's model sees the history of all three ??? DAM
 and GDAM correlate at 0.90 and RTM tracks DAM at 0.81. The spreads turned out to
 be the single most important feature for both GDAM and RTM: the relationship
 between two markets is far more stable than the absolute level of either.
@@ -70,6 +70,7 @@ iex_dayahead/
   forecast.py   daily run: fetch -> features -> predict -> Excel -> backfill
   retrain.py    extend history, rebuild features, backtest, save models
   plots.py      forecast vs actual for a given day
+  figures.py    the README charts, built from local history + forecast log
 ```
 
 ## Running it
@@ -82,11 +83,8 @@ python -m iex_dayahead.retrain              # build models (check the backtest t
 python -m iex_dayahead.forecast             # forecast tomorrow
 python -m iex_dayahead.forecast --backfill-only   # fill in actuals, refresh accuracy
 python -m iex_dayahead.plots 2026-07-24     # plot one day
+python -m iex_dayahead.figures              # build the charts below
 ```
-
-Paths default to `data/`, `models/` and `output/` under the repo root. Override
-with `IEXFC_DATA_DIR`, `IEXFC_MODEL_DIR`, `IEXFC_OUT_DIR` to run against a
-different location on a server.
 
 ## Data
 
@@ -109,8 +107,9 @@ mechanism aimed at catching price crashes went nowhere, because crashes lack the
 day-to-day persistence that makes caps predictable.
 
 The most instructive bug was in deployment, not modelling. The live system
-quietly reported accuracy about fifteen points below backtest — no error, no
+quietly reported accuracy about fifteen points below backtest ??? no error, no
 warning, just worse predictions. A handful of features were not being rebuilt
 correctly in the live path. Finding it meant comparing the two pipelines feature
 by feature for a single day. I now treat that comparison as a routine deployment
 check rather than a debugging step of last resort.
+

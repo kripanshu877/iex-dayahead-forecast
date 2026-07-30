@@ -2,6 +2,9 @@
 data/
 models/
 output/
+
+# committed README figures are the exception
+!docs/figures/
 *.csv
 *.xlsx
 *.json.bak
